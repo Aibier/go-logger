@@ -21,8 +21,13 @@ jobs:
       with:
         go-version: 1.19
 
-    - name: Build
-      run: go build -v ./...
+    - name: install dependencies
+      run:
+        - go vet ./...
+        - go get -u golang.org/x/lint/golint
+        - golint -set_exit_status ./...
 
     - name: Test
-      run: go test -v ./...
+      run:
+        - go test -race -cover ./... -coverprofile=coverage.out
+        - go tool cover -func=coverage.out
